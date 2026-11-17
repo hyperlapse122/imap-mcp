@@ -1,21 +1,27 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "imap-mcp",
-  "main": "src/index.ts",
-  "compatibility_date": "2026-11-01",
-  "compatibility_flags": ["nodejs_compat"],
-  // Serve only on a custom domain behind Cloudflare Access (pass it with `wrangler deploy --domain`).
-  // The workers.dev and preview URLs are off so nothing reaches the Worker around Access.
-  "workers_dev": false,
-  "preview_urls": false,
-  "d1_databases": [
-    {
-      // Wrangler creates the database on first deploy when no database_id is given.
-      "binding": "DB",
-      "database_name": "imap-mcp",
-      "migrations_dir": "migrations"
-    }
-  ],
-  // Secrets, set with `wrangler secret put`: ENCRYPTION_KEY, ACCESS_TEAM_DOMAIN, ACCESS_AUD, and optionally ALLOWED_EMAILS.
-  "observability": { "enabled": true, "head_sampling_rate": 1 }
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "imap-mcp",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-11-01",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	// Serve only on a custom domain behind Cloudflare Access (pass it with `wrangler deploy --domain`).
+	// The workers.dev and preview URLs are off so nothing reaches the Worker around Access.
+	"workers_dev": false,
+	"preview_urls": false,
+	"d1_databases": [
+		{
+			// Wrangler creates the database on first deploy when no database_id is given.
+			"binding": "DB",
+			"database_name": "imap-mcp",
+			"migrations_dir": "migrations",
+			"database_id": "3e8ee07e-2b4f-4e5a-8ce8-660f1179ca76"
+		}
+	],
+	// Secrets, set with `wrangler secret put`: ENCRYPTION_KEY, ACCESS_TEAM_DOMAIN, ACCESS_AUD, and optionally ALLOWED_EMAILS.
+	"observability": {
+		"enabled": true,
+		"head_sampling_rate": 1
+	}
 }
