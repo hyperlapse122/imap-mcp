@@ -34,7 +34,8 @@ function page(title: string, body: string, status = 200): Response {
       "Cache-Control": "no-store",
       "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'",
       "X-Content-Type-Options": "nosniff",
-      "Referrer-Policy": "no-referrer",
+      // "no-referrer" would make browsers send `Origin: null` on our own form posts.
+      "Referrer-Policy": "same-origin",
     },
   });
 }
@@ -101,11 +102,12 @@ function redirect(location: string): Response {
 
 /** Reject cross-site form posts. Access cookies would otherwise ride along. */
 export function sameOrigin(request: Request): boolean {
-  const origin = request.headers.get("Origin");
-  const self = new URL(request.url).origin;
-  if (origin) return origin === self;
+  // Sec-Fetch-Site is set by the browser and cannot be forged by a page, so trust it first.
   const site = request.headers.get("Sec-Fetch-Site");
-  return site === "same-origin" || site === null;
+  if (site) return site === "same-origin" || site === "none";
+  const origin = request.headers.get("Origin");
+  if (!origin || origin === "null") return true;
+  return origin === new URL(request.url).origin;
 }
 
 export async function handleWeb(request: Request, store: AccountStore, deps: MailDeps, email: string | null): Promise<Response> {

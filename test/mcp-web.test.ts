@@ -120,3 +120,24 @@ describe("account page", () => {
     expect(res.status).toBe(403);
   });
 });
+
+describe("same-origin check", () => {
+  const post = (headers: Record<string, string>) => new Request(`${BASE}/accounts`, { method: "POST", headers });
+  it("accepts the page's own form posts as browsers send them", async () => {
+    const { sameOrigin } = await import("../src/web");
+    expect(sameOrigin(post({ "Sec-Fetch-Site": "same-origin", Origin: "null" }))).toBe(true);
+    expect(sameOrigin(post({ "Sec-Fetch-Site": "same-origin", Origin: BASE }))).toBe(true);
+    expect(sameOrigin(post({ Origin: BASE }))).toBe(true);
+  });
+  it("refuses posts from other sites", async () => {
+    const { sameOrigin } = await import("../src/web");
+    expect(sameOrigin(post({ "Sec-Fetch-Site": "cross-site", Origin: "https://evil.example" }))).toBe(false);
+    expect(sameOrigin(post({ "Sec-Fetch-Site": "same-site", Origin: "https://other.h82.example" }))).toBe(false);
+    expect(sameOrigin(post({ Origin: "https://evil.example" }))).toBe(false);
+  });
+  it("sends a referrer policy that keeps Origin on same-origin posts", async () => {
+    const { store, deps } = await setup();
+    const res = await handleWeb(new Request(`${BASE}/`), store, deps, null);
+    expect(res.headers.get("Referrer-Policy")).toBe("same-origin");
+  });
+});
