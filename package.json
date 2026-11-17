@@ -1,0 +1,27 @@
+{
+  "name": "imap-mcp",
+  "version": "0.1.0",
+  "description": "Read-only IMAP MCP server on Cloudflare Workers",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc",
+    "test": "vitest run",
+    "check": "tsc && vitest run"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@cloudflare/workers-oauth-provider": "^1.2.4",
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "postal-mime": "^4.2.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261117.1",
+    "typescript": "^5.9.3",
+    "vitest": "^5.1.0",
+    "wrangler": "^4.163.0"
+  },
+  "private": true,
+  "type": "module"
+}
