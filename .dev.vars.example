@@ -1,0 +1,5 @@
+# Copy to .dev.vars for `wrangler dev`. Never commit real values.
+ENCRYPTION_KEY=
+ACCESS_TEAM_DOMAIN=your-team.cloudflareaccess.com
+ACCESS_AUD=
+ALLOWED_EMAILS=
